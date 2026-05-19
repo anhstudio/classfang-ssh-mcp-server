@@ -4,7 +4,7 @@ COPY package.json package-lock.json* tsconfig.json ./
 RUN npm install
 COPY src ./src
 COPY scripts ./scripts
-RUN node scripts/build.js
+RUN npm run build
 
 FROM node:22-alpine
 WORKDIR /app
