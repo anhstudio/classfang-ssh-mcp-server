@@ -11,13 +11,11 @@ trap 'rm -f "$KEY_FILE"' EXIT
 printf '%s\n' "$SSH_PRIVATE_KEY" > "$KEY_FILE"
 chmod 600 "$KEY_FILE"
 
-PRIVATE_KEY_CONTENT="$(cat "$KEY_FILE")"
-
 set -- \
   "--host=$SSH_HOST" \
   "--port=$SSH_PORT" \
   "--username=$SSH_USER" \
-  "--privateKey=$PRIVATE_KEY_CONTENT"
+  "--privateKey=$KEY_FILE"
 
 if [ -n "${SSH_PASSPHRASE:-}" ]; then
   set -- "$@" "--passphrase=$SSH_PASSPHRASE"
