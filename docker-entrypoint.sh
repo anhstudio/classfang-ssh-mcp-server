@@ -11,26 +11,28 @@ trap 'rm -f "$KEY_FILE"' EXIT
 printf '%s\n' "$SSH_PRIVATE_KEY" > "$KEY_FILE"
 chmod 600 "$KEY_FILE"
 
+PRIVATE_KEY_CONTENT="$(cat "$KEY_FILE")"
+
 set -- \
-  --host "$SSH_HOST" \
-  --port "$SSH_PORT" \
-  --username "$SSH_USER" \
-  --privateKey "$(cat "$KEY_FILE")"
+  "--host=$SSH_HOST" \
+  "--port=$SSH_PORT" \
+  "--username=$SSH_USER" \
+  "--privateKey=$PRIVATE_KEY_CONTENT"
 
 if [ -n "${SSH_PASSPHRASE:-}" ]; then
-  set -- "$@" --passphrase "$SSH_PASSPHRASE"
+  set -- "$@" "--passphrase=$SSH_PASSPHRASE"
 fi
 
 if [ -n "${SSH_WHITELIST:-}" ]; then
-  set -- "$@" --whitelist "$SSH_WHITELIST"
+  set -- "$@" "--whitelist=$SSH_WHITELIST"
 fi
 
 if [ -n "${SSH_BLACKLIST:-}" ]; then
-  set -- "$@" --blacklist "$SSH_BLACKLIST"
+  set -- "$@" "--blacklist=$SSH_BLACKLIST"
 fi
 
 if [ -n "${SSH_ALLOWED_REMOTE_PATHS:-}" ]; then
-  set -- "$@" --allowed-remote-paths "$SSH_ALLOWED_REMOTE_PATHS"
+  set -- "$@" "--allowed-remote-paths=$SSH_ALLOWED_REMOTE_PATHS"
 fi
 
 exec node /app/build/index.js "$@"
